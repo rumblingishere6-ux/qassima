@@ -10,6 +10,10 @@ app.use(express.static('.'));
 const BOT_TOKEN = process.env.BOT_TOKEN;
 const CHAT_ID = process.env.CHAT_ID;
 
+console.log('[v0] Server Starting...');
+console.log('[v0] BOT_TOKEN configured:', !!BOT_TOKEN);
+console.log('[v0] CHAT_ID configured:', !!CHAT_ID);
+
 // قاعدة بيانات وهمية للسيارات
 const fakeCars = {
   "1234 ع 99": { marque: "Renault", modele: "Symbol", annee: "2020", carburant: "Essence" },
@@ -83,4 +87,4 @@ app.post('/api/search-car', (req, res) => {
 const port = process.env.PORT || 3000;
 // هذا التصدير ضروري لـ Vercel
 export default app;
-app.listen(port, () => console.log(✅ خادم المنصة يعمل على المنفذ ${port}));
+app.listen(port, () => console.log(`✅ خادم المنصة يعمل على المنفذ ${port}`));
