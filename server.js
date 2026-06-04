@@ -67,4 +67,6 @@ app.post('/api/search-car', (req, res) => {
 });
 
 const port = process.env.PORT || 3000;
+// هذا التصدير ضروري لـ Vercel
+export default app;
 app.listen(port, () => console.log(✅ خادم المنصة يعمل على المنفذ ${port}));
