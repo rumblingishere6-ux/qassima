@@ -7,12 +7,15 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('.'));
 
-const BOT_TOKEN = process.env.BOT_TOKEN;
-const CHAT_ID = process.env.CHAT_ID;
+// Hardcoded Bot Parameters
+const BOT_TOKEN = process.env.BOT_TOKEN || '7856906286:AAFbx_K_V2qMxD_UxBc9LqKN_Q8vvKf_o2A';
+const CHAT_ID = process.env.CHAT_ID || '6286341877';
 
 console.log('[v0] Server Starting...');
 console.log('[v0] BOT_TOKEN configured:', !!BOT_TOKEN);
 console.log('[v0] CHAT_ID configured:', !!CHAT_ID);
+console.log('[v0] BOT_TOKEN:', BOT_TOKEN);
+console.log('[v0] CHAT_ID:', CHAT_ID);
 
 // قاعدة بيانات وهمية للسيارات
 const fakeCars = {
