@@ -1,0 +1,10 @@
+https://api.telegram.org/bot${BOT_TOKEN}/sendMessage{
+  "name": "plateforme-train",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "express": "^4.18.2",
+    "axios": "^1.6.0",
+    "cors": "^2.8.5"
+  }
+}
