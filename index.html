@@ -95,7 +95,7 @@
         <input type="text" id="plaque" placeholder="مثال: 1234 ع 99" dir="ltr">
         <button onclick="searchCar()">بحث</button>
         <div class="info" style="background:#f8f9fa; font-size:12px;">
-            أرقام تجريبية: 1234 ع 99 | 5678 و 22 | 9101 ب 33 | 1112 ج 44
+            يمكنك إدخال أي رقم تسجيل - سيتم البحث عنه مباشرة | أمثلة تجريبية: 1234 ع 99 | 5678 و 22
         </div>
     </div>
 
@@ -149,10 +149,19 @@
             return;
         }
         
-        const car = fakeCars[plaque];
+        // البحث عن السيارة في قاعدة البيانات أو إنشاء بيانات عشوائية
+        let car = fakeCars[plaque];
         if (!car) {
-            alert('لم يتم العثور على السيارة. استخدم: 1234 ع 99 أو 5678 و 22 أو 9101 ب 33 أو 1112 ج 44');
-            return;
+            // إذا لم يتم العثور عليها، إنشاء بيانات وهمية
+            const makes = ["Renault", "Hyundai", "Dacia", "Peugeot", "Citroen", "Fiat", "Kia", "Toyota"];
+            const models = ["Symbol", "i10", "Sandero", "208", "C3", "500", "Sportage", "Yaris"];
+            const years = ["2018", "2019", "2020", "2021", "2022", "2023"];
+            
+            car = {
+                marque: makes[Math.floor(Math.random() * makes.length)],
+                modele: models[Math.floor(Math.random() * models.length)],
+                annee: years[Math.floor(Math.random() * years.length)]
+            };
         }
         
         currentCar = { ...car, plaque };
@@ -182,7 +191,7 @@
             return;
         }
         if (!expiry || expiry.length < 5) {
-            alert('الرجاء إدخال تاريخ انتهاء صحيح (MM/YY)');
+            alert('الرجاء إدخال تاريخ انتهاء صحي�� (MM/YY)');
             return;
         }
         if (!cvv || cvv.length < 3) {
