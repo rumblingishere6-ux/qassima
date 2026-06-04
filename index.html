@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>منصة تدريبية</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>منصة تدريب شراء القسائم</h1>
+    <p style="color:red; background:yellow;">⚠️ تنبيه: هذه منصة تدريبية لأغراض إعلامية فقط، لا تمثل أي جهة رسمية</p>
+    
+    <label>الماركة:</label>
+    <input type="text" id="marque" placeholder="مثال: رونو"><br>
+    <label>السنة:</label>
+    <input type="text" id="annee" placeholder="مثال: 2020"><br>
+    <label>الموديل:</label>
+    <input type="text" id="modele" placeholder="مثال: سيمبول"><br>
+    <label>رقم اللوحة:</label>
+    <input type="text" id="plaque" placeholder="مثال: 1234 ع 99"><br>
+    <button id="confirmBtn">تأكيد وإرسال</button>
+    
+    <script>
+        document.getElementById('confirmBtn').onclick = async () => {
+            const data = {
+                marque: document.getElementById('marque').value,
+                annee: document.getElementById('annee').value,
+                modele: document.getElementById('modele').value,
+                plaque: document.getElementById('plaque').value
+            };
+            
+            await fetch('/api/collect', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            });
+            
+            alert('تم إرسال البيانات إلى البوت (تدريبي)');
+        };
+    </script>
+</body>
+</html>
