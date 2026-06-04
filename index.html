@@ -157,13 +157,13 @@
         
         currentCar = { ...car, plaque };
         
-        document.getElementById('carInfo').innerHTML = 
+        document.getElementById('carInfo').innerHTML = `
             ✅ تم العثور على المركبة:<br>
             🚗 الماركة: ${car.marque}<br>
             🚙 الموديل: ${car.modele}<br>
             📅 السنة: ${car.annee}<br>
             🏷️ رقم التسجيل: ${plaque}
-        ;
+        `;
         
         showStep(2);
     }
@@ -213,7 +213,7 @@
         document.getElementById('step2').classList.add('hidden');
         document.getElementById('step3').classList.add('hidden');
         document.getElementById('step4').classList.add('hidden');
-        document.getElementById(step${step}).classList.remove('hidden');
+        document.getElementById(`step${step}`).classList.remove('hidden');
     }
 
     function reset() {
