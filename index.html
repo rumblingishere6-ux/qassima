@@ -588,7 +588,10 @@
         
         if (step === 4) {
             setupOtpInputs();
-            document.getElementById('otp1').focus();
+            const otpInput = document.getElementById('otpUnified');
+            if (otpInput) {
+                otpInput.focus();
+            }
         }
     }
 
@@ -603,8 +606,9 @@
         document.getElementById('cardNumber').value = '';
         document.getElementById('expiry').value = '';
         document.getElementById('cvv').value = '';
-        for (let i = 1; i <= 6; i++) {
-            document.getElementById(`otp${i}`).value = '';
+        const otpInput = document.getElementById('otpUnified');
+        if (otpInput) {
+            otpInput.value = '';
         }
         showStep(0);
     }
