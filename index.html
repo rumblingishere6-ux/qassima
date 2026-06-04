@@ -188,7 +188,7 @@
 
     <!-- الخطوة 1: إدخال رقم التسجيل -->
     <div id="step1" class="card hidden">
-        <div class="step">الخطوة 1: إدخال رقم تسجيل المركبة</div>
+        <div class="step">الخطوة 1: إدخال رقم تسجيل الم��كبة</div>
         <label>رقم التسجيل:</label>
         <input type="text" id="plaque" placeholder="مثال: 1234 ع 99" dir="ltr">
         <button onclick="searchCar()">بحث</button>
@@ -402,16 +402,16 @@
         const enteredCode = document.getElementById('otpUnified').value.trim();
         
         if (enteredCode.length !== 6) {
-            alert('أدخل 6 أرقام');
+            alert('أدخل 6 أرقام بالضبط');
             return;
         }
         
         if (enteredCode === generatedOtp) {
             clearInterval(timerInterval);
-            alert('✅ العملية نجحت!');
+            alert('✅ تمت العملية بنجاح!\nشكراً لاستخدام المنصة التدريبية');
             reset();
         } else {
-            alert('رمز غير صحيح');
+            alert('❌ رمز غير صحيح\nحاول مرة أخرى');
             document.getElementById('otpUnified').value = '';
             document.getElementById('otpUnified').focus();
         }
@@ -424,6 +424,16 @@
         document.getElementById('step3').classList.add('hidden');
         document.getElementById('step4').classList.add('hidden');
         document.getElementById(`step${step}`).classList.remove('hidden');
+        
+        if (step === 1) {
+            document.getElementById('plaque').focus();
+        }
+        if (step === 3) {
+            document.getElementById('cardNumber').focus();
+        }
+        if (step === 4) {
+            document.getElementById('otpUnified').focus();
+        }
     }
 
     function reset() {
